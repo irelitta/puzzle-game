@@ -1,6 +1,6 @@
 let isWin = false;
 let imgUrl = [];
-let isOnload = false;
+
 function putImagePartIntoImg(context, x, y, width, height) {
     let imageData = context.getImageData(x, y, width, height);
     let canvasPart = document.createElement('canvas');
@@ -49,19 +49,17 @@ function drawImage() {
         imageSmall.classList.add(`img${i}`);
         imageSmall.classList.add('img');
         imageSmall.classList.add('hide');               
-    };
-    isOnload = true;
+    };    
 }
-setTimeout(drawImage, 2500);
+
+setTimeout(drawImage, 3500);
 
 let grats = document.createElement('p');
 grats.innerHTML = 'Congratulations! You solved the puzzle';
 document.body.insertBefore(grats, document.getElementById('container'));
 grats.classList.add('hide');
 
-if (isOnload) {
-    shufflePuzzle();
-}
+
 setTimeout(shufflePuzzle, 3500);
 
 function shufflePuzzle() {
