@@ -1,0 +1,34 @@
+html, body, img, p {
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+  }
+  
+
+  #container {
+    width: 700px;
+    
+    font-size: 0;  
+    margin: 50px;
+  }
+  
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding-inline-start: 0;
+  }
+  
+  .hide {
+    display: none;
+  }
+  
+  .selected {
+    opacity: 0.6;
+  }
+  
+  p {
+    font-size: 32px;
+    color: rgba(27, 185, 27, 0.973);
+    margin: 50px;
+  }

@@ -1,5 +1,7 @@
+let isWin = false;
 let imgUrl = [];
-function putImagePartIntoImg(context, imgDivId, x, y, width, height) {
+let isOnload = false;
+function putImagePartIntoImg(context, x, y, width, height) {
     let imageData = context.getImageData(x, y, width, height);
     let canvasPart = document.createElement('canvas');
     let contextPart = canvasPart.getContext('2d');
@@ -7,27 +9,12 @@ function putImagePartIntoImg(context, imgDivId, x, y, width, height) {
     canvasPart.height = height;
     contextPart.putImageData(imageData, 0, 0);
     canvasPart.toBlob(function (blob) {
-        var newImg = document.createElement('img'),
-            url = URL.createObjectURL(blob);
-    /*
-        newImg.onload = function () {
-            // больше не нужно читать blob, поэтому он отменён
-            URL.revokeObjectURL(url);
-        };
-        */
+        let newImg = document.createElement('img');        
+        let url = URL.createObjectURL(blob);   
         newImg.src = url;        
         imgUrl.push(url);
-        console.log('dhifdhdvbjskj');
-        //console.log(imgUrl);
-        //console.log(imgUrl[2]);
-        
-        //document.querySelector('#container').appendChild(newImg);
     });
-    //document.getElementById(imgDivId).src = canvasPart.toDataURL();
 }
-
-
-
 
 let image = new Image();
 
@@ -39,57 +26,139 @@ image.onload = function () {
     canvas.width = image.width;
     canvas.height = image.height;
     context.drawImage(image, 0, 0, image.width, image.height);
-    document.getElementById('source').src = canvas.toDataURL();
-    putImagePartIntoImg(context, 'left', 0, 0, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, 'right', image.width / 3, 0, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, 'right', image.width * 2 / 3, 0, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, 'left', 0, image.height / 3, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, 'right', image.width / 3, image.height / 3, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, 'right', image.width * 2 / 3, image.height / 3, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, 'left', 0, image.height *2 / 3, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, 'right', image.width / 3, image.height *2 / 3, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, 'right', image.width * 2 / 3, image.height *2 / 3, image.width / 3, image.height / 3);
-    setTimeout(() => {
-        console.log(imgUrl);
-    }, 500 );
-    console.log(imgUrl);
-    console.log(imgUrl[2]);    
-
+    document.getElementById('source').src = canvas.toDataURL();    
+    putImagePartIntoImg(context, 0, 0, image.width / 3, image.height / 3);
+    putImagePartIntoImg(context, image.width / 3, 0, image.width / 3, image.height / 3);
+    putImagePartIntoImg(context, image.width * 2 / 3, 0, image.width / 3, image.height / 3);
+    putImagePartIntoImg(context, 0, image.height / 3, image.width / 3, image.height / 3);
+    putImagePartIntoImg(context, image.width / 3, image.height / 3, image.width / 3, image.height / 3);
+    putImagePartIntoImg(context, image.width * 2 / 3, image.height / 3, image.width / 3, image.height / 3);
+    putImagePartIntoImg(context, 0, image.height *2 / 3, image.width / 3, image.height / 3);
+    putImagePartIntoImg(context, image.width / 3, image.height *2 / 3, image.width / 3, image.height / 3);
+    putImagePartIntoImg(context, image.width * 2 / 3, image.height *2 / 3, image.width / 3, image.height / 3);
 }
-image.src = 'white-ship.jpg';
-
+image.src = 'yellow-ship.jpg';
+const src = []
 function drawImage() {
-    for (let i = 0; i < 9; i++) {
-        let cell = document.createElement('li');
-        document.querySelector('#container').appendChild(cell);
-        cell.classList.add(`class${i}`);
-        cell.style = 'width: 214px; height: 120px; background-color: aqua;'
-        let image = document.createElement('img');
-        image.src = imgUrl[i];
-        console.log(imgUrl[2]);
-        cell.appendChild(image);
+    for (let i = 0; i < 9; i++) {        
+        let imageSmall = document.createElement('img');
+        imageSmall.setAttribute("draggable", "true");        
+        imageSmall.src = imgUrl[i];
+        imageSmall.style = 'cursor: move;';
+        document.getElementById('container').appendChild(imageSmall);
+        imageSmall.classList.add(`img${i}`);
+        imageSmall.classList.add('img');
+        imageSmall.classList.add('hide');               
+    };
+    isOnload = true;
+}
+setTimeout(drawImage, 2500);
+
+let grats = document.createElement('p');
+grats.innerHTML = 'Congratulations! You solved the puzzle';
+document.body.insertBefore(grats, document.getElementById('container'));
+grats.classList.add('hide');
+
+if (isOnload) {
+    shufflePuzzle();
+}
+setTimeout(shufflePuzzle, 3500);
+
+function shufflePuzzle() {
+    let currentItem = document.querySelector('.list');    
+    let items = [...document.querySelectorAll('.img')];
+    let newItem = currentItem;
+    newItem.innerHTML = '';
+    items.sort((a, b) => Math.random() > 0.5 ? 1 : -1).slice(0, 9);    
+    for(let i = 0; i < 9; i++) {
+        newItem.appendChild(items[i]);
+        items[i].classList.remove('hide');
     };
 }
-setTimeout(drawImage, 1000);
 
+const tasksListElement = document.querySelector('.list');
+const taskElements = tasksListElement.querySelectorAll('.img');
 
-/*
-
-let canvas = document.getElementById('c1');
-let ctx = canvas.getContext('2d');
-ctx.fillStyle = 'rgb(140, 140, 140)';
-ctx.fillRect(0, 0, 300, 300);
-canvas.toBlob(function (blob) {
-    var newImg = document.createElement('img'),
-        url = URL.createObjectURL(blob);
-
-    newImg.onload = function () {
-        // больше не нужно читать blob, поэтому он отменён
-        URL.revokeObjectURL(url);
-    };
-    newImg.src = url;
-    
-    document.body.appendChild(newImg);
+tasksListElement.addEventListener('dragstart', (evt) => {
+    evt.target.classList.add('selected');
 });
 
-*/
+tasksListElement.addEventListener('dragend', (evt) => {
+    const hoveredElement = tasksListElement.querySelector('.hovered');
+    const targetElement = evt.target;
+    
+    if (hoveredElement) {
+        let items = [...document.querySelectorAll('.img')];    
+        let hoveredIndex = items.findIndex((elem) => elem.classList.contains('hovered'));
+        let targetIndex = items.findIndex((elem) => elem.classList.contains('selected'));
+        changeCurrentItem(hoveredIndex, targetIndex);
+
+        targetElement.classList.remove('selected');
+        hoveredElement.classList.remove('hovered');
+        
+        checkPuzzle();
+        setTimeout(checkPuzzle, 2500);
+        if (isWin) {
+            grats.classList.remove('hide');
+        }
+    }
+    targetElement.classList.remove('selected');
+});
+
+function changeCurrentItem(firstIndex, secondIndex) {
+    let currentItem = document.querySelector('.list');    
+    let items = [...document.querySelectorAll('.img')];
+    let newItem = currentItem;
+    newItem.innerHTML = '';
+    temp = items[firstIndex];
+    items[firstIndex] = items[secondIndex];
+    items[secondIndex] = temp;
+    for(let i = 0; i < 9; i++) {
+        newItem.appendChild(items[i]);
+    };
+}
+
+tasksListElement.addEventListener('dragover', (evt) => {
+    evt.preventDefault();    
+    const activeElement = tasksListElement.querySelector('.selected');
+    const currentElement = evt.target;
+    const isMoveable = activeElement !== currentElement &&
+       currentElement.classList.contains('img');
+    if (!isMoveable) {
+        return;
+    }
+    evt.target.classList.add('hovered');
+});
+
+tasksListElement.addEventListener('dragleave', (evt) => {
+    evt.preventDefault();
+    evt.target.classList.remove('hovered');
+});
+
+function checkPuzzle() {
+    let items = [...document.querySelectorAll('.img')];
+    for (let i = 0; i < 9; i++) {
+        let index = items.findIndex((elem) => elem.classList.contains(`img${i}`));        
+        if (index != i) {            
+            return;
+        }
+    }
+    isWin = true;
+    items.forEach((elem) => {
+        elem.setAttribute("draggable", "false");
+        elem.style = 'cursor: default;';
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
