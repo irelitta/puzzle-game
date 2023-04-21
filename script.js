@@ -1,7 +1,7 @@
 let isWin = false;
 let imgUrl = [];
 
-function putImagePartIntoImg(context, x, y, width, height) {
+function putImagePartIntoImg(context, x, y, width, height, index) {
     let imageData = context.getImageData(x, y, width, height);
     let canvasPart = document.createElement('canvas');
     let contextPart = canvasPart.getContext('2d');
@@ -12,7 +12,7 @@ function putImagePartIntoImg(context, x, y, width, height) {
         let newImg = document.createElement('img');        
         let url = URL.createObjectURL(blob);   
         newImg.src = url;        
-        imgUrl.push(url);
+        imgUrl[index] = url;
     });
 }
 
@@ -27,15 +27,15 @@ image.onload = function () {
     canvas.height = image.height;
     context.drawImage(image, 0, 0, image.width, image.height);
     document.getElementById('source').src = canvas.toDataURL();    
-    putImagePartIntoImg(context, 0, 0, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, image.width / 3, 0, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, image.width * 2 / 3, 0, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, 0, image.height / 3, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, image.width / 3, image.height / 3, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, image.width * 2 / 3, image.height / 3, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, 0, image.height *2 / 3, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, image.width / 3, image.height *2 / 3, image.width / 3, image.height / 3);
-    putImagePartIntoImg(context, image.width * 2 / 3, image.height *2 / 3, image.width / 3, image.height / 3);
+    putImagePartIntoImg(context, 0, 0, image.width / 3, image.height / 3, 0);
+    putImagePartIntoImg(context, image.width / 3, 0, image.width / 3, image.height / 3, 1);
+    putImagePartIntoImg(context, image.width * 2 / 3, 0, image.width / 3, image.height / 3, 2);
+    putImagePartIntoImg(context, 0, image.height / 3, image.width / 3, image.height / 3, 3);
+    putImagePartIntoImg(context, image.width / 3, image.height / 3, image.width / 3, image.height / 3, 4);
+    putImagePartIntoImg(context, image.width * 2 / 3, image.height / 3, image.width / 3, image.height / 3, 5);
+    putImagePartIntoImg(context, 0, image.height *2 / 3, image.width / 3, image.height / 3, 6);
+    putImagePartIntoImg(context, image.width / 3, image.height *2 / 3, image.width / 3, image.height / 3, 7);
+    putImagePartIntoImg(context, image.width * 2 / 3, image.height *2 / 3, image.width / 3, image.height / 3, 8);    
 }
 image.src = 'yellow-ship.jpg';
 const src = []
@@ -52,7 +52,7 @@ function drawImage() {
     };    
 }
 
-setTimeout(drawImage, 3500);
+setTimeout(drawImage, 2500);
 
 let grats = document.createElement('p');
 grats.innerHTML = 'Congratulations! You solved the puzzle';
@@ -60,7 +60,7 @@ document.body.insertBefore(grats, document.getElementById('container'));
 grats.classList.add('hide');
 
 
-setTimeout(shufflePuzzle, 3500);
+setTimeout(shufflePuzzle, 2500);
 
 function shufflePuzzle() {
     let currentItem = document.querySelector('.list');    
